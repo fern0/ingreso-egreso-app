@@ -10,7 +10,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
 import { AppState } from '../app.reducer';
 import { ActivarLoadingAction, DesactivarLoadingAction } from '../shared/ui.actions';
-import { SetUserAction } from './auth.actions';
+import { SetUserAction, UnsetUserAction } from './auth.actions';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 })
 export class AuthService {
     private userSubscription: Subscription = new Subscription(); //para prevenir el unsuscribe de algo que no es de tipo subscription
+    private user: User;
     constructor(
         private afAuth: AngularFireAuth,
         private router: Router,
@@ -34,9 +35,12 @@ export class AuthService {
                     .subscribe((userDocObj: any) => {
                         const newUser = new User(userDocObj);
                         this.store.dispatch(new SetUserAction(newUser));
-                        console.log(newUser);
+                        //console.log(newUser);
+                        this.user = newUser;
                     });
             } else {
+                this.user = null;
+                this.store.dispatch(new UnsetUserAction());
                 this.userSubscription.unsubscribe(); //prevenir creaar un monton de observables que estn pendiente de cosas que no nos interesan
             }
         });
@@ -103,6 +107,7 @@ export class AuthService {
 
     logout() {
         this.afAuth.auth.signOut();
+        this.store.dispatch(new UnsetUserAction());
         this.router.navigate([ '/login' ]);
     }
 
@@ -115,5 +120,9 @@ export class AuthService {
                 return fbUser !== null;
             })
         ); //true o false
+    }
+
+    getUser() {
+        return { ...this.user };
     }
 }

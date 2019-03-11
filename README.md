@@ -37,3 +37,16 @@ setear en el app.module
             maxAge: 30,
             logOnly: environment.production
         })
+
+#GIT
+--commit and push
+git status
+git add .
+git commit -m "mensaje"
+git push
+
+-Add tag
+git tag -a v2.0.0 -m "redux loading y user terminado"
+git push --tags
+
+--Ir a github.com / releases / generar el nuevo release .zip
