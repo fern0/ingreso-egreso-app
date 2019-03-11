@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { IngresoEgresoService } from './ingreso-egreso.service';
 import Swal from 'sweetalert2';
 import { DesactivarLoadingAction, ActivarLoadingAction } from '../shared/ui.actions';
+import * as fromIngresoEgreso from './ingreso-egreso.reducer';
 @Component({
     selector: 'app-ingreso-egreso',
     templateUrl: './ingreso-egreso.component.html',
@@ -18,7 +19,10 @@ export class IngresoEgresoComponent implements OnInit, OnDestroy {
     subscriptionLoading: Subscription = new Subscription();
     cargando: boolean;
 
-    constructor(private store: Store<AppState>, public ingresoEgresoSrv: IngresoEgresoService) {}
+    constructor(
+        private store: Store<fromIngresoEgreso.IngresoEgresoAppState>,
+        public ingresoEgresoSrv: IngresoEgresoService
+    ) {}
 
     ngOnInit() {
         this.fomularioIngreso = new FormGroup({
